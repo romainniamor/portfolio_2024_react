@@ -7,12 +7,10 @@ function ButtonLink({ text }) {
   const ref2 = useRef();
 
   const onHover = () => {
-    // Animation GSAP pour les deux références
     gsap.to([ref1.current, ref2.current], { y: "-100%", duration: 0.3 });
   };
 
   const onLeave = () => {
-    // Animation GSAP pour revenir à la position originale
     gsap.to([ref1.current, ref2.current], { y: 0, duration: 0.3 });
   };
 

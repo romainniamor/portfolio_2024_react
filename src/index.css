@@ -8,3 +8,15 @@
   background-color: #131313;
   position: relative;
 }
+
+.mask {
+  position: absolute;
+  mask-image: url("./assets/cursor.svg");
+  mask-repeat: no-repeat;
+  top: 0;
+  left: 0;
+  background: rgb(204, 30, 54);
+  mask-position: center;
+  mask-size: 30px;
+  color: black;
+}

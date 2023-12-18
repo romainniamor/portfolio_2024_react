@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import ButtonLink from "./components/ButtonLink";
 import { motion } from "framer-motion";
 import MagneticLink from "./components/MagneticLink";
+import MouseMove from "./components/MouseMove";
 
 function App() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -14,21 +14,7 @@ function App() {
     return 20;
   };
 
-  // console.log("mousePosition:", mousePosition);
-
-  useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    // Add event listener for mouse movement
-    window.addEventListener("mousemove", updateMousePosition);
-
-    // Cleanup function to remove the event listener
-    return () => {
-      window.removeEventListener("mousemove", updateMousePosition);
-    };
-  }, [mousePosition]);
+  const { x, y } = MouseMove();
 
   const textEnter = () => {
     setIsHovered(true);
@@ -67,7 +53,7 @@ function App() {
           <MagneticLink>
             <svg
               viewBox="0 0 128 128"
-              className="cursor-pointer p-5 cursor-pointer p-5 opacity-20 hover:opacity-100"
+              className="cursor-pointer p-5 opacity-20 hover:opacity-100"
             >
               <path
                 fill="#fff"
@@ -104,13 +90,11 @@ function App() {
       <motion.div
         className="mask absolute w-full h-full flex justify-center items-center"
         style={{
-          WebkitMaskPosition: `${mousePosition.x}px ${mousePosition.y}px`,
+          WebkitMaskPosition: `${x}px ${y}px`,
           WebkitMaskSize: `${size()}px`,
         }}
         animate={{
-          WebkitMaskPosition: `${mousePosition.x - size() / 2}px ${
-            mousePosition.y - size() / 2
-          }px`,
+          WebkitMaskPosition: `${x - size() / 2}px ${y - size() / 2}px`,
           WebkitMaskSize: `${size()}px`,
         }}
         transition={{ type: "tween", ease: "backOut", duration: 0.3 }}

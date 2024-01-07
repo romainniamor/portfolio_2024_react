@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import ButtonLink from "./components/ButtonLink";
 import { motion } from "framer-motion";
 import MagneticLink from "./components/MagneticLink";
@@ -7,39 +7,47 @@ import { gsap } from "gsap";
 import SplitType from "split-type";
 
 function App() {
-  const nameTitle = useRef(null);
+  const comp = useRef(null);
+  const titleOver = useRef(null);
+  const titleUnder = useRef(null);
 
-  useEffect(() => {
-    const nameTitles = document.querySelectorAll(".hero-name-title");
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      const nameOver = new SplitType(titleOver.current, {
+        types: "chars",
+      });
+      const nameUnder = new SplitType(titleUnder.current, {
+        types: "chars",
+      });
 
-    // Créez une timeline GSAP
-    const tl = gsap.timeline();
+      gsap.fromTo(
+        nameUnder.chars,
 
-    nameTitles.forEach((nameTitle) => {
-      // Appliquez SplitType à chaque élément
-      const name = new SplitType(nameTitle, { types: "chars" });
-
-      // Ajoutez les caractères de cet élément à la timeline
-      tl.fromTo(
-        name.chars,
         { y: -50, rotate: -5 },
-        { y: 0, rotate: 0, duration: 0.3, stagger: 0.05 },
-        0 // Ajoutez à la même position dans la timeline pour une animation simultanée
+        { y: 0, rotate: 0, duration: 0.3, stagger: 0.05 }
       );
-    });
 
-    gsap.fromTo(
-      " .hero-title",
-      {
-        y: 200,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-      }
-    );
+      gsap.fromTo(
+        nameOver.chars,
+
+        { y: -50, rotate: -5 },
+        { y: 0, rotate: 0, duration: 0.3, stagger: 0.05 }
+      );
+
+      gsap.fromTo(
+        " .hero-title",
+        {
+          y: 200,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+        }
+      );
+    }, comp);
+    return () => ctx.revert();
   }, []);
 
   const [isHovered, setIsHovered] = useState(false);
@@ -55,8 +63,8 @@ function App() {
   const { x, y } = MouseMove();
 
   const textEnter = () => {
-    setIsHovered(true);
     setIsVisible(true);
+    setIsHovered(true);
   };
   const textLeave = () => {
     setIsHovered(false);
@@ -70,7 +78,10 @@ function App() {
   };
 
   return (
-    <div className="app w-full h-screen relative bg-black flex flex-col justify-center items-center">
+    <div
+      ref={comp}
+      className="app w-full h-screen relative bg-black flex flex-col justify-center items-center"
+    >
       <nav className="fixed top-0 left-0 w-full flex justify-end z-10 p-10 ">
         <div
           onMouseEnter={linkEnter}
@@ -128,7 +139,9 @@ function App() {
       </footer>
       <div className="uppercase w-3/4 p-10 text-left text-neutral-300">
         <div className="overflow-hidden mb-6">
-          <h1 className="hero-name-title text-xl">romain navoret</h1>
+          <h1 ref={titleOver} className="hero-name-title text-xl">
+            romain navoret
+          </h1>
         </div>
 
         <div className="flex flex-col font-semibold">
@@ -169,7 +182,9 @@ function App() {
             className="uppercase w-min  p-10 text-black"
           >
             <div className="overflow-hidden mb-6">
-              <h1 className="hero-name-title text-xl">romain navoret</h1>
+              <h1 ref={titleUnder} className="hero-name-title text-xl">
+                romain navoret
+              </h1>
             </div>
             <div className="flex flex-col font-semibold">
               <div>

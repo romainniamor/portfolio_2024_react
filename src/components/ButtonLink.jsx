@@ -19,12 +19,12 @@ function ButtonLink({ text }) {
       href=""
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="menu-item relative text-xl font-bold leading-none overflow-hidden cursor-pointer"
+      className="menu-item relative text-l font-bold leading-none overflow-hidden cursor-pointer"
     >
-      <div ref={ref1} className=" text-neutral-300/20 f text-right">
+      <div ref={ref1} className=" text-neutral-300/20 uppercase text-right">
         {text}
       </div>
-      <div className="hover-clone absolute bottom-[-100%] right-0  text-neutral-300 text-right">
+      <div className="hover-clone absolute bottom-[-100%] right-0 uppercase  text-neutral-300 text-right">
         <div ref={ref2}>{text}</div>
       </div>
     </a>

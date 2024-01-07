@@ -1,23 +1,62 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ButtonLink from "./components/ButtonLink";
 import { motion } from "framer-motion";
 import MagneticLink from "./components/MagneticLink";
 import MouseMove from "./components/MouseMove";
+import { gsap } from "gsap";
+import SplitType from "split-type";
 
 function App() {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const nameTitle = useRef(null);
 
+  useEffect(() => {
+    const nameTitles = document.querySelectorAll(".hero-name-title");
+
+    // Créez une timeline GSAP
+    const tl = gsap.timeline();
+
+    nameTitles.forEach((nameTitle) => {
+      // Appliquez SplitType à chaque élément
+      const name = new SplitType(nameTitle, { types: "chars" });
+
+      // Ajoutez les caractères de cet élément à la timeline
+      tl.fromTo(
+        name.chars,
+        { y: -50, rotate: -5 },
+        { y: 0, rotate: 0, duration: 0.3, stagger: 0.05 },
+        0 // Ajoutez à la même position dans la timeline pour une animation simultanée
+      );
+    });
+
+    gsap.fromTo(
+      " .hero-title",
+      {
+        y: 200,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+      }
+    );
+  }, []);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  //taille du cursor de la souris en fonction de la position de la souris par defaut 30, 0 ou 500 si hover layout
   const size = () => {
     if (!isVisible) return 0;
     if (isHovered) return 500;
-    return 20;
+    return 30;
   };
 
   const { x, y } = MouseMove();
 
   const textEnter = () => {
     setIsHovered(true);
+    setIsVisible(true);
   };
   const textLeave = () => {
     setIsHovered(false);
@@ -32,11 +71,11 @@ function App() {
 
   return (
     <div className="app w-full h-screen relative bg-black flex flex-col justify-center items-center">
-      <nav className="fixed top-0 left-0 w-full flex justify-end z-20 ">
+      <nav className="fixed top-0 left-0 w-full flex justify-end z-10 p-10 ">
         <div
           onMouseEnter={linkEnter}
           onMouseLeave={linkLeave}
-          className="flex flex-col gap-4 px-10 py-20"
+          className="flex flex-col gap-4 p-3"
         >
           <ButtonLink text="Home" />
           <ButtonLink text="About" />
@@ -44,16 +83,20 @@ function App() {
           <ButtonLink text="Contact" />
         </div>
       </nav>
-      <footer className="fixed bottom-0 left-0 w-full flex justify-start z-20 text-yellow-300 ">
+      <footer className="fixed bottom-0 left-0 w-full flex justify-start z-10 p-10">
         <div
           onMouseEnter={linkEnter}
           onMouseLeave={linkLeave}
-          className="flex flex-col gap-2 px-10 py-20"
+          className="flex flex-col gap-2"
         >
-          <MagneticLink>
+          <MagneticLink
+            url={"https://www.linkedin.com/in/romain-navoret-559480274/"}
+          >
             <svg
               viewBox="0 0 128 128"
               className="cursor-pointer p-5 opacity-20 hover:opacity-100"
+              width="80px"
+              height="80px"
             >
               <path
                 fill="#fff"
@@ -66,7 +109,7 @@ function App() {
             </svg>
           </MagneticLink>
 
-          <MagneticLink>
+          <MagneticLink url={"https://github.com/romainniamor"}>
             <svg
               className="cursor-pointer p-5 fill-white opacity-20 hover:opacity-100"
               width="80px"
@@ -83,10 +126,30 @@ function App() {
           </MagneticLink>
         </div>
       </footer>
-      <h1 className="text-neutral-300 text-9xl text-center">
-        web <br />
-        developer <br /> react <br /> django
-      </h1>
+      <div className="uppercase w-3/4 p-10 text-left text-neutral-300">
+        <div className="overflow-hidden mb-6">
+          <h1 className="hero-name-title text-xl">romain navoret</h1>
+        </div>
+
+        <div className="flex flex-col font-semibold">
+          <div>
+            <div className="overflow-hidden -mb-5">
+              <h2 className="hero-title text-9xl ">web</h2>
+            </div>
+            <div className="overflow-hidden -mb-5">
+              <h2 className=" hero-title text-9xl text-orange-600">front</h2>
+            </div>
+
+            <div className="overflow-hidden -mb-5 ">
+              <h2 className="  hero-title text-9xl ">dev</h2>
+            </div>
+            <div className="overflow-hidden">
+              <h2 className="  hero-title text-9xl ">react</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <motion.div
         className="mask absolute w-full h-full flex justify-center items-center"
         style={{
@@ -97,16 +160,36 @@ function App() {
           WebkitMaskPosition: `${x - size() / 2}px ${y - size() / 2}px`,
           WebkitMaskSize: `${size()}px`,
         }}
-        transition={{ type: "tween", ease: "backOut", duration: 0.3 }}
+        transition={{ type: "tween", ease: "backOut", duration: 1 }}
       >
-        <h1
-          className="text-9xl text-center"
-          onMouseEnter={textEnter}
-          onMouseLeave={textLeave}
-        >
-          Making <br />
-          stuff <br /> on <br /> web
-        </h1>
+        <div className="uppercase w-3/4 text-left text-neutral-300">
+          <div
+            onMouseEnter={textEnter}
+            onMouseLeave={textLeave}
+            className="uppercase w-min  p-10 text-black"
+          >
+            <div className="overflow-hidden mb-6">
+              <h1 className="hero-name-title text-xl">romain navoret</h1>
+            </div>
+            <div className="flex flex-col font-semibold">
+              <div>
+                <div className="overflow-hidden -mb-5">
+                  <h2 className="hero-title text-9xl ">and</h2>
+                </div>
+                <div className="overflow-hidden -mb-5">
+                  <h2 className=" hero-title text-9xl ">also</h2>
+                </div>
+
+                <div className="overflow-hidden -mb-5 ">
+                  <h2 className="  hero-title text-9xl ">full</h2>
+                </div>
+                <div className="overflow-hidden">
+                  <h2 className="  hero-title text-9xl ">django</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

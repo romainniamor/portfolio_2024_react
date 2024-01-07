@@ -7,6 +7,10 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: #131313;
   position: relative;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard syntax */
 }
 
 .mask {
@@ -15,8 +19,13 @@
   mask-repeat: no-repeat;
   top: 0;
   left: 0;
-  background: white;
+  background: orangered;
   mask-position: center;
   mask-size: 30px;
   color: black;
+}
+
+.hero-title {
+  clip-path: polygon(0 0, 100% 0%, 100% 100%, 0% 100%);
+  line-height: 1;
 }
